@@ -7,7 +7,7 @@ from circle import Circle
 pygame.init()
 
 # Screen dimensions
-width, height = 800, 600
+width, height = 1200, 800
 screen = pygame.display.set_mode((width, height))
 
 # Colors
@@ -20,8 +20,8 @@ center_x, center_y = width // 2, height // 2
 
 # Objects
 objects = {
-    'Ellipse': Ellipse(0, 0, 200, 100),
-    'Circle': Circle(0, 0, 50)
+    'Ellipse': Ellipse(0, 0, 500, 250),
+    'Circle': Circle(0, 0, 300)
 }
 current_object_name = 'Ellipse'
 current_object = objects[current_object_name]
