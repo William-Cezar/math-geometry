@@ -13,6 +13,7 @@ class Circle:
         self.radius_text = str(radius)
         self.diameter_text = str(radius * 2)
         self.circumference_text = f'{2 * radius}\u03C0'
+        self.area_text = f'{radius * radius}\u03C0'
 
     def draw(self, screen):
         center_x, center_y = screen.get_size()
@@ -40,6 +41,8 @@ class Circle:
         self.draw_radius_input(screen)
         self.draw_diameter_input(screen)
         self.draw_circumference_input(screen)
+        self.draw_area_input(screen)
+        self.draw_more_info_button(screen)
 
     def draw_radius_input(self, screen):
         font = pygame.font.Font(None, 36)
@@ -65,15 +68,31 @@ class Circle:
         font = pygame.font.Font(None, 36)
         input_box = pygame.Rect(screen.get_width() - 260, 110, 260, 40)
         pygame.draw.rect(screen, (0, 0, 0), input_box, 2)
-        circumference_text = font.render(f'Circunference: {self.circumference_text}', True, (0, 0, 0))
+        circumference_text = font.render(f'Circumference: {self.circumference_text}', True, (0, 0, 0))
         screen.blit(circumference_text, (screen.get_width() - 250, 115))
+
+    def draw_area_input(self, screen):
+        font = pygame.font.Font(None, 36)
+        input_box = pygame.Rect(screen.get_width() - 260, 160, 260, 40)
+        pygame.draw.rect(screen, (0, 0, 0), input_box, 2)
+        area_text = font.render(f'Area: {self.area_text}', True, (0, 0, 0))
+        screen.blit(area_text, (screen.get_width() - 250, 165))
+
+    def draw_more_info_button(self, screen):
+        font = pygame.font.Font(None, 36)
+        button_rect = pygame.Rect(screen.get_width() - 260, 210, 260, 40)
+        pygame.draw.rect(screen, (0, 0, 255), button_rect, 2)
+        button_text = font.render('More Information', True, (0, 0, 255))
+        screen.blit(button_text, (screen.get_width() - 250, 215))
 
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if pygame.Rect(screen.get_width() - 210, 10, 200, 40).collidepoint(event.pos):
+            if pygame.Rect(screen.get_width() - 260, 10, 260, 40).collidepoint(event.pos):
                 self.active_input = 'radius'
-            elif pygame.Rect(screen.get_width() - 210, 60, 200, 40).collidepoint(event.pos):
+            elif pygame.Rect(screen.get_width() - 260, 60, 260, 40).collidepoint(event.pos):
                 self.active_input = 'diameter'
+            elif pygame.Rect(screen.get_width() - 260, 210, 260, 40).collidepoint(event.pos):
+                self.show_more_info()
             else:
                 self.active_input = None
         elif event.type == pygame.KEYDOWN and self.active_input:
@@ -83,6 +102,7 @@ class Circle:
                         self.radius = int(self.radius_text)
                         self.diameter_text = str(self.radius * 2)
                         self.circumference_text = f'{2 * self.radius}\u03C0' 
+                        self.area_text = f'{self.radius * self.radius}\u03C0'
                     except ValueError:
                         self.radius_text = str(self.radius)
                     self.active_input = None
@@ -95,7 +115,8 @@ class Circle:
                     try:
                         self.radius = int(int(self.diameter_text) / 2)
                         self.radius_text = str(self.radius)
-                        self.circumference_text = f'{2 * self.radius}\u03C0' 
+                        self.circumference_text = f'{2 * self.radius}\u03C0'
+                        self.area_text = f'{self.radius * self.radius}\u03C0'
                     except ValueError:
                         self.diameter_text = str(self.radius * 2)
                     self.active_input = None
@@ -103,3 +124,47 @@ class Circle:
                     self.diameter_text = self.diameter_text[:-1]
                 else:
                     self.diameter_text += event.unicode
+
+    def show_more_info(self):
+        # Create a new window and display more information
+        more_info_screen = pygame.display.set_mode((800, 600))
+        pygame.display.set_caption("More Information")
+        font = pygame.font.Font(None, 36)
+        small_font = pygame.font.Font(None, 28)
+        running = True
+        while running:
+            more_info_screen.fill((255, 255, 255))
+            info_text = font.render("Information about Circle:", True, (0, 0, 0))
+            more_info_screen.blit(info_text, (10, 10))
+
+            explanations = [
+                "A circle is a simple closed shape.",
+                "It is the set of all points in a plane that are at a given distance",
+                "from a given point, the centre.",
+                "The distance between any of the points and the centre is called the radius.",
+                "",
+                "Equations:",
+                "Radius (r): The distance from the center to the edge.",
+                "Diameter (d): The distance across the circle, through the center. d = 2r.",
+                "Circumference (C): The distance around the circle. C = 2πr.",
+                "Area (A): The space enclosed by the circle. A = πr².",
+                "The standard form equation of a circle with center (h,k) and radius r is:",
+                "(x - h)² + (y - k)² = r²",
+                "In our example",
+                f"(x)² + (y)² = {self.radius}²",
+            ]
+
+            y_offset = 60
+            for line in explanations:
+                explanation_text = small_font.render(line, True, (0, 0, 0))
+                more_info_screen.blit(explanation_text, (10, y_offset))
+                y_offset += 40
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+
+            pygame.display.flip()
+
+        pygame.display.set_mode((width, height))
+        pygame.display.set_caption("Main Window")

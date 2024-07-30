@@ -2,6 +2,7 @@ import pygame
 import sys
 from ellipse import Ellipse
 from circle import Circle
+from square import Square
 
 # Initialize Pygame
 pygame.init()
@@ -20,8 +21,9 @@ center_x, center_y = width // 2, height // 2
 
 # Objects
 objects = {
-    'Ellipse': Ellipse(0, 0, 500, 250),
-    'Circle': Circle(0, 0, 300)
+    'Ellipse': Ellipse(0, 0, 300, 140),
+    'Circle': Circle(0, 0, 100),
+    'Square': Square(0,0, 200)
 }
 current_object_name = 'Ellipse'
 current_object = objects[current_object_name]
